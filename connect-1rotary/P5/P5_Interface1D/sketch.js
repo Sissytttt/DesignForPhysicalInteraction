@@ -48,11 +48,19 @@ function draw() {
   // console.log(ArduinoDataA, forceLeft_A);
 }
 
+// get the list of ports:
+function printList(portList) {
+  for (var i = 0; i < portList.length; i++) {
+    console.log(i + portList[i]);
+  }
+}
+
 function catchData() {
+  console.log("got data")
   let currentString = serial.readLine();
-  console.log(currentString);
   if (currentString.length > 0) {
     ArduinoDataA = currentString.trim();
+    console.log(ArduinoDataA)
     ArduinoDataA = int(ArduinoDataA);
   }
 }
