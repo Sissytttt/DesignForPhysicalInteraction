@@ -1,6 +1,6 @@
 // TODO：
-// 1. diffent level  (?)
-// 2. if no one is pressing -- go back to center (?)
+// 1. diffent level
+// 2. sense of time -- fade away if is not catched
 
 
 let serial; //arduino
@@ -9,7 +9,7 @@ let ArduinoDataA = "";
 let ArduinoDataB = "";
 
 let forceLeft_A = 0;
-let forceRight_B = 3;
+let forceRight_B = 0;
 let SCORE = 0;
 
 let k = 0.04; // larger K, stronger Sping, bigger Force
@@ -24,10 +24,44 @@ let blockSize = 30;
 let catcher;
 let playerA, playerB;
 let controller;
-let targetNum = 1;
-let targets = [];
 
 let displayedScore = 0;
+
+let level = 1;
+let targets = [];
+
+let LevelData = {
+  1: {
+    score: 2,
+    TargetLifeReductionMin: 0.0005,
+    TargetLifeReductionMax: 0.001,
+    targetNum: 1,
+    targetPossibility: 0.5,
+  },
+  2: {
+    score: 4,
+    TargetLifeReductionMin: 0.002,
+    TargetLifeReductionMax: 0.003,
+    targetNum: 1,
+    targetPossibility: 0.5,
+  },
+  3: {
+    score: 6,
+    TargetLifeReductionMin: 0.003,
+    TargetLifeReductionMax: 0.005,
+    targetNum: 2,
+    targetPossibility: 0.005,
+  },
+  4: {
+    score: 30,
+    TargetLifeReductionMin: 0.005,
+    TargetLifeReductionMax: 0.008,
+    targetNum: 3,
+    targetPossibility: 0.002,
+  }
+
+}
+
 
 function setup() {
   serial = new p5.SerialPort();
@@ -45,21 +79,5 @@ function setup() {
 function draw() {
   controller.update();
   processDataA(ArduinoDataA);
-  // console.log(ArduinoDataA, forceLeft_A);
-}
-
-function catchData() {
-  let currentString = serial.readLine();
-  console.log(currentString);
-  if (currentString.length > 0) {
-    ArduinoDataA = currentString.trim();
-    ArduinoDataA = int(ArduinoDataA);
-  }
-}
-
-function processDataA(ArduinoData) {
-  if (ArduinoDataA == "") {
-    return;
-  }
-  forceLeft_A = map(ArduinoData, 0, 30, 0, 6);
+  processDataB(ArduinoDataB)
 }

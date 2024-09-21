@@ -1,10 +1,12 @@
 #define rotaryEncoderAOutput1 6
 #define rotaryEncoderAOutput2 7
-#define buttonAPin 1
+#define buttonAPin 4
 
 #define rotaryEncoderBOutput1 5
 #define rotaryEncoderBOutput2 8
 #define buttonBPin 3
+
+#define buttonRPin 9
 
 // rotary encoder A
 int counterA = 0;
@@ -17,6 +19,7 @@ int rBLastState;
 // button
 int buttonAState = 0;
 int buttonBState = 0;
+int buttonRState = 0;
 
 void setup() {
   // rotary encoder A
@@ -29,6 +32,7 @@ void setup() {
   // buttons
   pinMode(buttonAPin, INPUT_PULLUP);
   pinMode(buttonBPin, INPUT_PULLUP);
+  pinMode(buttonRPin, INPUT_PULLUP);
 
   Serial.begin(9600);
 
@@ -55,13 +59,14 @@ void loop() {
   if(digitalRead(buttonAPin) == LOW && buttonAState == 0) {
     counterA = 0;
     Serial.print("A");
-    Serial.println(counterA);  // Print 0 when the button is pressed
-    buttonAState = 1; // Mark that button has been pressed
+    Serial.println(counterA); 
+    buttonAState = 1;
   }
   if(digitalRead(buttonAPin) == HIGH) {
-    buttonAState = 0; // Reset button state when released
+    buttonAState = 0; 
   }
-
+  
+  // ================================================================
   // Rotary Encoder B
   rBState = digitalRead(rotaryEncoderBOutput1);
   if(rBState != rBLastState) {
@@ -84,5 +89,19 @@ void loop() {
   }
   if(digitalRead(buttonBPin) == HIGH) {
     buttonBState = 0;
+  }
+
+  // ================================================================
+  //Button R
+    if(digitalRead(buttonRPin) == LOW && buttonRState == 0) {
+    counterA = 0;
+    counterB = 0;
+    Serial.println("R");
+    Serial.println("A0");
+    Serial.println("B0");
+    buttonRState = 1;
+  }
+  if(digitalRead(buttonRPin) == HIGH) {
+    buttonRState = 0; 
   }
 }

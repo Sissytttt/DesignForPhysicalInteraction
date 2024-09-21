@@ -1,6 +1,6 @@
-function keyInteraction() {
+function userInteraction() {
     if (controller.gameState == "PLAY") {
-        if (forceLeft_A > 0 && keyIsDown(RIGHT_ARROW)) {
+        if (forceLeft_A > 0 && forceRight_B > 0) {
             stretching = true;
         } else {
             stretching = false;
@@ -9,7 +9,7 @@ function keyInteraction() {
             if (forceLeft_A > 0) {
                 playerA.applyForce(-1 * forceLeft_A);
             }
-            if (keyIsDown(RIGHT_ARROW)) {
+            if (forceRight_B > 0) {
                 playerB.applyForce(forceRight_B);
             }
         } else if (stretching == false) {
@@ -17,7 +17,7 @@ function keyInteraction() {
                 playerA.applyForce(-1 * forceLeft_A);
                 playerB.applyForce(-1 * forceLeft_A);
             }
-            if (keyIsDown(RIGHT_ARROW)) {
+            if (forceRight_B > 0) {
                 playerA.applyForce(forceRight_B);
                 playerB.applyForce(forceRight_B);
             }
@@ -26,7 +26,7 @@ function keyInteraction() {
 }
 
 
-// function keyInteraction() {
+// function userInteraction() {
 //     if (controller.gameState == "PLAY") {
 //         if (keyIsDown(LEFT_ARROW) && keyIsDown(RIGHT_ARROW)) {
 //             stretching = true;
@@ -54,12 +54,12 @@ function keyInteraction() {
 // }
 
 
-function keyPressed() {
-    if (key == "R" || key == "r") {
-        controller.gameState = "PLAY";
-        SCORE = 0;
-        displayedScore = 0;
-        playerA.pos = length / 2 - 50;
-        playerB.pos = length / 2 + 50;
-    }
-}
+// function keyPressed() {
+//     if (key == "R" || key == "r") {
+//         controller.gameState = "PLAY";
+//         SCORE = 0;
+//         displayedScore = 0;
+//         playerA.pos = length / 2 - 50;
+//         playerB.pos = length / 2 + 50;
+//     }
+// }

@@ -1,9 +1,10 @@
+
 function updateTarget() {
     if (targets.length > 0) {
         for (let i = 0; i < targets.length; i++) {
             let t = targets[i];
             t.display();
-            // t.age(); // *** 
+            t.age();
             t.collision(catcher);
             t.disappear();
         }
@@ -12,13 +13,25 @@ function updateTarget() {
 
 
 function generateTarget() {
-    while (targets.length < targetNum) {
-        let target = new Target(random(2 * blockSize, length - 2 * blockSize))
-            .set_lifeReduction(0.001, 0.005)
-            .set_targetSize(random(blockSize, blockSize * 2.5));
-        targets.push(target);
+    if (targets.length < 1) {
+        if (random() < 0.05) {
+            let target = new Target(random(2 * blockSize, length - 2 * blockSize))
+                .set_lifeReduction(LevelData[level].TargetLifeReductionMin, LevelData[level].TargetLifeReductionMax)
+                .set_targetSize(random(blockSize, blockSize * 2.5));
+            targets.push(target);
+        }
+    }
+
+    else if (targets.length > 1 && targets.length < LevelData[level].maxNum_of_Target) {
+        if (random() < LevelData[level].targetPossibility) {
+            let target = new Target(random(2 * blockSize, length - 2 * blockSize))
+                .set_lifeReduction(LevelData[level].TargetLifeReductionMin, LevelData[level].TargetLifeReductionMax)
+                .set_targetSize(random(blockSize, blockSize * 2.5));
+            targets.push(target);
+        }
     }
 }
+
 
 class Target {
     constructor(x) {
@@ -105,6 +118,10 @@ class Target {
         if (this.coveredTime >= this.coverLimit) {
             this.isDone = true;
             SCORE++;
+            if (SCORE >= LevelData[level].score) {
+                level += 1;
+                console.log("level:", level);
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ class Controller {
         switch (this.gameState) {
             case "PLAY":
                 background(0);
-                keyInteraction();
+                userInteraction();
 
                 catcher.updatePos();
                 catcher.updateLen();
