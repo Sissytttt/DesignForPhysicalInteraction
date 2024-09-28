@@ -1,8 +1,4 @@
-// todo
-// 1. 从小的开始
-// 2. life不要random
-// 
-// 
+
 function updateTarget() {
     if (targets.length > 0) {
         for (let i = 0; i < targets.length; i++) {
@@ -10,7 +6,7 @@ function updateTarget() {
             t.display();
             t.age();
             t.collision(catcher);
-            t.disappear();
+            t.remove();
         }
     }
 }
@@ -19,16 +15,17 @@ function updateTarget() {
 function generateTarget() {
     if (targets.length < 1) {
         if (random() < 0.05) {
-            let target = new Target(random(2 * blockSize, length - 2 * blockSize))
+            let sectionNum = randSection();
+            let target = new Target(random(section[sectionNum][0], section[sectionNum][0]))
                 .set_lifeReduction(LevelData[level].TargetLifeReduction)
                 .set_targetSize(LevelData[level].Targetsize);
             targets.push(target);
         }
     }
-
-    else if (targets.length > 1 && targets.length < LevelData[level].maxNum_of_Target) {
+    else if (targets.length >= 1 && targets.length < LevelData[level].maxNum_of_Target) {
         if (random() < LevelData[level].targetPossibility) {
-            let target = new Target(random(2 * blockSize, length - 2 * blockSize))
+            let sectionNum = randSection();
+            let target = new Target(random(section[sectionNum][0], section[sectionNum][0]))
                 .set_lifeReduction(LevelData[level].TargetLifeReduction)
                 .set_targetSize(LevelData[level].Targetsize);
             targets.push(target);
@@ -36,6 +33,33 @@ function generateTarget() {
     }
 }
 
+function divideSection(num) {
+    let segmentLen = (length - ends * 2) / num;
+    for (let i = 0; i < num; i++) {
+        let secMin = ends + i * segmentLen;
+        let secMax = (i + 1) * segmentLen;
+        section[i] = [secMin, secMax];
+    }
+}
+
+function randSection() {
+    let sect = floor(random(0, sectionDivision));
+
+    if (sectionHistory.includes(sect)) {
+        return randSection();
+    }
+    else if (level >= 3 && level < 5 && sect == floor(sectionDivision / 2) + 1) {
+        return randSection();
+    }
+    else if (level >= 5 && sect != Object.keys(section)[0] && sect != Object.keys(section)[-1] && sect != Object.keys(section)[floor(sectionDivision / 2) + 1]) {
+        return randSection();
+    }
+    sectionHistory.push(sect);
+    if (sectionHistory.length > 2) {
+        sectionHistory.shift();
+    }
+    return sect;
+}
 
 class Target {
     constructor(x) {
@@ -47,7 +71,7 @@ class Target {
         this.isDone = false;
         this.coveredTime = 0;
         this.covering = false;
-        this.coverLimit = 100;
+        this.coverLimit = 50; // *** time to wrap to win
         this.blink = false;
     }
 
@@ -62,31 +86,51 @@ class Target {
     }
 
     display() {
-        push();
+        // let size = this.size * (1 - this.coveredTime / this.coverLimit);
+        let size = this.size;
+        if (this.pos < size / 2 + ends) {
+            this.pos = size / 2 + ends;
+        } else if (this.pos > length - size / 2) {
+            this.pos = length - size / 2 - ends;
+        }
         if (this.blink == false) {
-            fill(0, 255, 255, this.alpha);
-            ellipse(this.pos, blockSize / 2, this.size, blockSize);
+            fill(255, 222, 0, this.alpha);
+            rectMode(CENTER);
+            rect(this.pos, blockSize / 2, size, blockSize);
         }
         // console.log(this.covering, this.blink)
-        else if (this.blink && frameCount % 30 < 15) {
-            fill(0, 255, 255, this.alpha);
-            ellipse(this.pos, blockSize / 2, this.size, blockSize);
+        else if (this.blink && frameCount % 7 < 4) {
+            fill(255, 222, 0, this.alpha);
+            rectMode(CENTER);
+            rect(this.pos, blockSize / 2, size, blockSize);
+            this.alpha -= 8;
         }
-        pop();
+
+        if (this.lifespan <= 0.1) {
+            if (frameCount % 15 < 7) {
+                fill(255, 0, 0, this.alpha * 2)
+                rect(this.pos, blockSize / 2, size, blockSize);
+            }
+        }
     }
 
     age() {
         this.lifespan -= this.lifeReduction;
-        if (this.lifespan < 1 / 3) {
-            this.alpha -= 255 * this.lifeReduction * 3;
+        if (this.lifespan < 1 / 5) {
+            this.alpha = 255
+            this.alpha -= 255 * this.lifeReduction * 5;
         }
         if (this.lifespan <= 0) {
             this.lifespan = 0;
+            LOST += 1;
             this.isDone = true;
+            if (LOST >= 3) {
+                controller.gameState = "GAMEOVER";
+            }
         }
     }
 
-    disappear() {
+    remove() {
         if (this.isDone) {
             let index = targets.indexOf(this);
             if (index > -1) {
@@ -117,6 +161,7 @@ class Target {
             this.blink = true;
         } else {
             this.coveredTime = 0;
+            this.alpha = 255;
         }
 
         if (this.coveredTime >= this.coverLimit) {

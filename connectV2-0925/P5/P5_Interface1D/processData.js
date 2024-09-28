@@ -20,7 +20,6 @@ function catchData() {
             playerA.pos = length / 2 - 50;
             playerB.pos = length / 2 + 50;
             level = 1;
-            targetNum = 1;
         }
     }
 }

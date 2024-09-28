@@ -8,6 +8,7 @@ class Catcher {
         this.stretchSpeed = 1; // ***
         this.shrinkSpeed = 4; // ***
         this.maxLen = maxLen; // ***
+        this.safeLen = maxLen * 0.65;
         this.col = color(255, 255, 255);
     }
 
@@ -20,8 +21,12 @@ class Catcher {
     }
 
     updateColor() {
-        let stretchRatio = constrain(abs(this.len - this.oriLen) / 120, 0, 1);
-        this.col = lerpColor(color(255, 255, 255), color(255, 0, 0), stretchRatio);
+        let redValue = 255;
+        if (this.len > this.safeLen) {
+            let stretchRatio = constrain((this.len - this.safeLen) / (this.maxLen - this.safeLen), 0, 1);
+            redValue = 255 * (1 - stretchRatio);
+        }
+        this.col = color(255, redValue, redValue);
     }
 
     display() {
