@@ -37,3 +37,4 @@ function processDataB(ArduinoData) {
     }
     forceRight_B = map(ArduinoData, 0, 30, 0, 12);
 }
+

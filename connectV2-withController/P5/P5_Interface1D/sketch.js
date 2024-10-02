@@ -3,8 +3,8 @@
 // 2. sense of time -- fade away if is not catched
 
 
-let serial; //arduino
-let portName = '/dev/tty.usbmodem1101';
+let serial; //arduino ***
+let portName = '/dev/tty.usbmodem1101'; // *** 
 let ArduinoDataA = "";
 let ArduinoDataB = "";
 
@@ -75,8 +75,8 @@ let LevelData = {
 
 
 function setup() {
-  // serial = new p5.SerialPort(); // ***
-  // serial.open(portName); // ***
+  serial = new p5.SerialPort(); // ***
+  serial.open(portName); // ***
 
   createCanvas(length, blockSize);
   controller = new Controller();
@@ -84,7 +84,7 @@ function setup() {
   playerB = new Player(length / 2 + 50);
   catcher = new Catcher(playerA, playerB, blockSize / 2);
   background(255, 0, 0);
-  // serial.on('data', catchData); // ***
+  serial.on('data', catchData); // ***
   divideSection(sectionDivision);
 }
 
