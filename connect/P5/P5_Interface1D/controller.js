@@ -60,5 +60,5 @@ function displayScore() {
 
 function showScore() {
     fill(255);
-    text("score: " + SCORE, 10, 10);
+    // text("score: " + SCORE, 10, 10);
 }

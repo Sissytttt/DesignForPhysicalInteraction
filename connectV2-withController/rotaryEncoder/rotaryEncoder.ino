@@ -1,5 +1,5 @@
-#define rotaryEncoderAOutput1 6
-#define rotaryEncoderAOutput2 7
+#define rotaryEncoderAOutput1 7
+#define rotaryEncoderAOutput2 6
 #define buttonAPin 4
 
 #define rotaryEncoderBOutput1 5
@@ -104,4 +104,16 @@ void loop() {
   if(digitalRead(buttonRPin) == HIGH) {
     buttonRState = 0; 
   }
+
+  // if (Serial.available() > 0) {
+  //   char key = Serial.read(); // 读取串口输入
+  //   if (key == ' ') { // 检测是否是空格键
+  //     counterA = 0;
+  //     counterB = 0;
+  //     Serial.println("R");
+  //     Serial.println("A0");
+  //     Serial.println("B0");
+  //   }
+  // }
+
 }

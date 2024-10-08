@@ -29,12 +29,12 @@ function processDataA(ArduinoData) {
     if (ArduinoDataA == "") {
         return;
     }
-    forceLeft_A = map(ArduinoData, 0, 30, 0, 12);
+    forceLeft_A = map(ArduinoData, 0, 100, 0, 5);
 }
 
 function processDataB(ArduinoData) {
     if (ArduinoDataB == "") {
         return;
     }
-    forceRight_B = map(ArduinoData, 0, 30, 0, 12);
+    forceRight_B = map(ArduinoData, 0, 100, 0, 5);
 }
